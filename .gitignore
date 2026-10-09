@@ -1,6 +1,9 @@
 node_modules
+.env
+dist
+src/generated/prisma
+frontend/dist
+.vite
 # Keep environment variables out of version control
 .env.*
 !.env.example
-
-/generated/prisma

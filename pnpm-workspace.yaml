@@ -1,4 +1,10 @@
+packages:
+  - frontend
+
 allowBuilds:
   '@prisma/engines': true
+  '@prisma/client': true
+  edgedriver: false
   esbuild: true
+  geckodriver: false
   prisma: true

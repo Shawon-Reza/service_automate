@@ -1,12 +1,19 @@
 {
-  "name": "health_care_management_back",
+  "name": "android-automation-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
-    "lint": "eslint ./src "
+    "build": "prisma generate && tsc",
+    "start": "node dist/server.js",
+    "check-devices": "tsx scripts/check-devices.ts",
+    "frontend": "pnpm --dir frontend dev",
+    "frontend:build": "pnpm --dir frontend build",
+    "lint": "eslint ./src ./scripts",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +21,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "^11.20.0",
+      "version": ">=9",
       "onFail": "download"
     }
   },
@@ -33,10 +40,11 @@
     "typescript-eslint": "^8.69.0"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.23.0"
+    "pg": "^8.23.1",
+    "webdriverio": "^9.21.0"
   }
 }

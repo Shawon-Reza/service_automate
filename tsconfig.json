@@ -1,15 +1,14 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
-    
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "target": "ES2023",
+    "rootDir": "src",
+    "outDir": "dist",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
     "strict": true,
     "esModuleInterop": true,
-    "ignoreDeprecations": "6.0"
-  }
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "frontend", "scripts"]
 }

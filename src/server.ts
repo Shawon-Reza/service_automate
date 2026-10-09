@@ -1,23 +1,32 @@
-import { app } from "./lib/app.js";
-import { prisma } from "./lib/prisma.js"
+import { app } from "./app.js";
+import { env } from "./config/env.js";
+import { prisma } from "./lib/prisma.js";
+import { jobManager } from "./jobs/job.manager.js";
 
-const PORT = process.env.PORT || 5000;
+try {
+  await prisma.$connect();
+  await jobManager.failInterruptedJobs();
 
+  const server = app.listen(env.port, "127.0.0.1", () => {
+    console.log(`Android automation API listening at http://localhost:${env.port}`);
+  });
 
-// ==================== IIFE Sunction to start the server ====================\\
-(async () => {
-    try {
-        await prisma.$connect();
-        // console.log("Server is running....")
-        app.listen(process.env.PORT || 5001, () => {
-            console.log(`Server is running on port ${PORT}`);
-        })
-    } catch (error) {
-        console.log(`Error on starting server : ${error}`)
-        await prisma.$disconnect();
-        process.exit(1);
-    }
-
-
-})()
-
+  for (const signal of ["SIGINT", "SIGTERM"] as const) {
+    process.once(signal, () => {
+      server.close((error) => {
+        if (error) {
+          console.error("Could not close the HTTP server cleanly.", error);
+          process.exitCode = 1;
+        }
+        void prisma.$disconnect().catch((disconnectError: unknown) => {
+          console.error("Could not disconnect from PostgreSQL cleanly.", disconnectError);
+          process.exitCode = 1;
+        });
+      });
+    });
+  }
+} catch (error) {
+  console.error("Could not connect to PostgreSQL or recover interrupted jobs.", error);
+  await prisma.$disconnect();
+  process.exitCode = 1;
+}
